@@ -1,19 +1,59 @@
 import React, { Component } from 'react';
 import logo from '../logo.png';
 import './App.css';
+import { create } from 'ipfs-http-client'
+
+//const ipfsClient = require('ipfs-http-client')
+const ipfs = create('https://ipfs.infura.io:5001/api/v0')
 
 class App extends Component {
+
+  constructor(props)
+  {
+    super(props)
+    this.state = {
+      buffer: null,
+      memeHash:"Qmc9TdNL5kDbKpv2XAPWtQPiqUj7bEi9Be8Tthh8ZnShD1"
+    }
+  }
+
+  captureFile = (event) =>{
+    event.preventDefault()
+    //console.log("File captured......")
+    const file= event.target.files[0]
+    const reader = new window.FileReader()
+    reader.readAsArrayBuffer(file)
+    reader.onloadend = () =>{
+      console.log('buffer', Buffer(reader.result))
+      this.setState({buffer: Buffer(reader.result)})
+    }
+
+  }
+    
+
+  // Example Hash : "Qmc9TdNL5kDbKpv2XAPWtQPiqUj7bEi9Be8Tthh8ZnShD1"
+  //Example URL: "https://ipfs.infura.io/ipfs/Qmc9TdNL5kDbKpv2XAPWtQPiqUj7bEi9Be8Tthh8ZnShD1"
+
+
+  onSubmit = async (event) =>{
+    event.preventDefault()
+    console.log("Submitting the form...")
+    const hash= await ipfs.add(this.state.buffer)
+    const url = `https://ipfs.infura.io/ipfs/${hash.path}`
+    console.log(typeof hash.path)
+  }
+   
+
   render() {
     return (
       <div>
         <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
           <a
             className="navbar-brand col-sm-3 col-md-2 mr-0"
-            href="http://www.dappuniversity.com/bootcamp"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Dapp University
+            Hospital Records
           </a>
         </nav>
         <div className="container-fluid mt-5">
@@ -27,18 +67,14 @@ class App extends Component {
                 >
                   <img src={logo} className="App-logo" alt="logo" />
                 </a>
-                <h1>Dapp University Starter Kit</h1>
-                <p>
-                  Edit <code>src/components/App.js</code> and save to reload.
-                </p>
-                <a
-                  className="App-link"
-                  href="http://www.dappuniversity.com/bootcamp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  LEARN BLOCKCHAIN <u><b>NOW! </b></u>
-                </a>
+
+                <h2> Upload the records</h2>
+
+                <form onSubmit={this.onSubmit}>
+                  <input type='file' onChange={this.captureFile} />
+                  <input type ='submit'/>
+                </form>
+                
               </div>
             </main>
           </div>
