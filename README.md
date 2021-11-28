@@ -4,7 +4,7 @@ Managing Patient documents across different Hospital is quite hassling. This Dap
 Only Hospital authority has the priviledge to upload  Medical documents for the patients registered in our system. For storing the files, we have used IPFS, which
 is a peer-to-peer distributed system.
 
-## To Run on Locahost
+## To Run on Localhost
 1. Clone the Repo and istall dependencies
 ```
 https://github.com/somesh-banerjee/Hospital-Records-Blockchain.git
